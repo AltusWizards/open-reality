@@ -141,12 +141,18 @@ public abstract partial class WorldTargetActionEvent : BaseActionEvent
     ///     The coordinates of the location that the user targeted.
     /// </summary>
     public EntityCoordinates Target;
+
+    public EntityUid TargetUid;
 }
 
 /// <summary>
-///     Base class for events that are raised when an action gets performed. This should not generally be used outside of the action
-///     system.
+///     This is the type of event that gets raised when an <see cref="WorldTargetAction"/> is performed. The <see
+///     cref="Performer"/> and <see cref="Target"/> fields will automatically be filled out by the <see
+///     cref="SharedActionsSystem"/>.
 /// </summary>
+/// <remarks>
+///     To define a new action for some system, you need to create an event that inherits from this class.
+/// </remarks>
 [ImplicitDataDefinitionForInheritors]
 public abstract partial class BaseActionEvent : HandledEntityEventArgs
 {
@@ -154,4 +160,25 @@ public abstract partial class BaseActionEvent : HandledEntityEventArgs
     ///     The user performing the action.
     /// </summary>
     public EntityUid Performer;
+
+    public EntityUid Action; // WD
+
+    public ActionUseType ActionUseType = ActionUseType.Default; // WD
+
+    public int ChargeLevel; // WD
 }
+
+// WD edit start
+[Serializable, NetSerializable]
+public enum ActionUseType
+{
+    Default, // left mouse click.
+    Charge, // Holding right mouse click(has 4 charges).
+    AltUse // Alt + left mouse click.
+}
+
+public sealed partial class ActionGettingRemovedEvent : EntityEventArgs
+{
+    public EntityUid Action;
+}
+// WD edit end

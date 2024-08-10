@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using Content.Shared._White.Events;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Actions;
 using Content.Shared.Administration.Logs;
@@ -25,6 +26,7 @@ using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+using Robust.Shared.Graphics.RSI;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Components;
@@ -357,6 +359,8 @@ public abstract partial class SharedGunSystem : EntitySystem
             return;
         }
 
+        RaiseLocalEvent(user, new EnergyDomeClothesTurnOffEvent()); // WD
+
         // Shoot confirmed - sounds also played here in case it's invalid (e.g. cartridge already spent).
         Shoot(gunUid, gun, ev.Ammo, fromCoordinates, toCoordinates.Value, out var userImpulse, user, throwItems: attemptEv.ThrowItems);
         var shotEv = new GunShotEvent(user, ev.Ammo);
@@ -533,6 +537,54 @@ public abstract partial class SharedGunSystem : EntitySystem
 
         Dirty(gun);
     }
+
+    // WD EDIT start
+    public void SetUseKey(Entity<GunComponent> gun, bool useKey)
+    {
+        gun.Comp.UseKey = useKey;
+
+        Dirty(gun);
+    }
+
+    public void SetClumsyProof(Entity<GunComponent> gun, bool clumsyProof)
+    {
+        gun.Comp.ClumsyProof = clumsyProof;
+
+        Dirty(gun);
+    }
+
+    public void SetProjectileSpeed(EntityUid weapon, float projectileSpeed)
+    {
+        if (!TryComp<GunComponent>(weapon, out var gunComponent))
+            return;
+
+        gunComponent.ProjectileSpeed = projectileSpeed;
+        RefreshModifiers(weapon);
+    }
+
+    public void SetFireRate(EntityUid weapon, float fireRate)
+    {
+        if (!TryComp<GunComponent>(weapon, out var gunComponent))
+            return;
+
+        gunComponent.FireRate = fireRate;
+        RefreshModifiers(weapon);
+    }
+
+    public void SetSound(EntityUid weapon, SoundSpecifier sound)
+    {
+        if (!TryComp<GunComponent>(weapon, out var gunComponent))
+            return;
+
+        gunComponent.SoundGunshot = sound;
+        RefreshModifiers(weapon);
+    }
+
+    public static void SetTarget(GunComponent gun, EntityUid? target)
+    {
+        gun.Target = target;
+    }
+    // WD edit end
 
     protected abstract void CreateEffect(EntityUid uid, MuzzleFlashEvent message, EntityUid? user = null);
 

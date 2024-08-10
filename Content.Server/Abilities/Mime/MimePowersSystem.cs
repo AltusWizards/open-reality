@@ -116,6 +116,9 @@ namespace Content.Server.Abilities.Mime
             if (!Resolve(uid, ref mimePowers))
                 return;
 
+            if (!mimePowers.CanBreakVow) // WD
+                return;
+
             if (mimePowers.VowBroken)
                 return;
 

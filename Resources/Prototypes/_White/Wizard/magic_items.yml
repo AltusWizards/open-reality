@@ -1,0 +1,139 @@
+- type: entity
+  name: высокочастотный клинок
+  parent: Katana
+  id: HighFrequencyBlade
+  description: Клинок, атакующий с невероятной быстротой, а также способный отражать выстрелы.
+  components:
+  - type: Sprite
+    sprite: White/Objects/Weapons/Chaplain/hfrequency.rsi
+  - type: MeleeWeapon
+    autoAttack: true
+    attackRate: 4
+    damage:
+      types:
+        Slash: 10
+  - type: Clothing
+    sprite: White/Objects/Weapons/Chaplain/hfrequency.rsi
+    slots:
+    - none
+  - type: Reflect
+    reflectProb: 0.4
+  - type: Item
+    sprite: White/Objects/Weapons/Chaplain/hfrequency.rsi
+    size: Large
+    storedRotation: 44
+    shape:
+    - 0, 0, 3, 0
+
+- type: entity
+  name: клинок заклинаний
+  parent: Katana
+  id: SpellBlade
+  description: Магический клинок, наделяемый силой одного из пяти аспектов.
+  components:
+  - type: Sprite
+    sprite: White/Objects/Weapons/Chaplain/spellblade.rsi
+  - type: MeleeWeapon
+    wideAnimationRotation: 135
+    damage:
+      types:
+        Slash: 30
+  - type: Clothing
+    quickEquip: false
+    sprite: White/Objects/Weapons/Chaplain/spellblade.rsi
+    slots:
+    - back
+    - suitStorage
+  - type: Item
+    sprite: White/Objects/Weapons/Chaplain/spellblade.rsi
+  - type: UserInterface
+    interfaces:
+      enum.SpellBladeUiKey.Key:
+        type: SpellBladeBUI
+  - type: ActivatableUI
+    key: enum.SpellBladeUiKey.Key
+    inHandsOnly: true
+    closeOnHandDeselect: true
+  - type: SpellBlade
+
+- type: entity
+  name: мьёльнир
+  parent: BaseItem
+  id: Mjolnir
+  description: Могучий молот, заимствованный у Тора, бога грома. Он трещит от едва сдерживаемой силы.
+  components:
+  - type: Sprite
+    sprite: White/Objects/Weapons/mjolnir.rsi
+    state: icon
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 0.75
+    damage:
+      types:
+        Blunt: 25
+        Structural: 20
+    soundHit:
+      path: /Audio/White/Magic/Mjolnir/hit.ogg
+    soundSwing:
+      path: /Audio/White/Magic/Mjolnir/swing.ogg
+  - type: Wieldable
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 15
+        Structural: 60
+  - type: Item
+    size: Huge
+    sprite: White/Objects/Weapons/mjolnir.rsi
+  - type: Clothing
+    quickEquip: false
+    sprite: White/Objects/Weapons/mjolnir.rsi
+    slots:
+    - back
+    - suitStorage
+  - type: DisarmMalus
+  - type: MeleeThrowOnHit
+    lifetime: 0.05
+    minLifetime: 0.01
+    speed: 20
+    stunTime: 1.5
+    throwOnThrowHit: true
+  - type: DamageOtherOnHit
+    sound:
+      path: /Audio/White/Magic/Mjolnir/hit.ogg
+    damage:
+      types:
+        Blunt: 40
+        Structural: 80
+  - type: ChangeThrowForce
+    throwForce: 20
+
+- type: entity
+  name: arcane barrage
+  parent: BaseItem
+  id: ArcaneBarrage
+  description: Pew Pew Pew.
+  components:
+  - type: Sprite
+    sprite: White/Objects/Weapons/arcane_barrage.rsi
+    state: icon
+  - type: Item
+    size: Ginormous
+    sprite: White/Objects/Weapons/arcane_barrage.rsi
+  - type: AmmoCounter
+  - type: Gun
+    fireRate: 4
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundEmpty: null
+    soundGunshot:
+      path: /Audio/Weapons/emitter.ogg
+    clumsyProof: true
+  - type: BasicEntityAmmoProvider
+    proto: ArcaneBolt
+    capacity: 30
+  - type: DeleteOnDropAttempt
+    message: bolt-barrage-component-extra-message
+  - type: BoltBarrage
+  - type: GiftIgnore
